@@ -1,35 +1,49 @@
-<x-app-layout>
-    <div class="py-10 bg-white dark:bg-[#0f172a] min-h-screen">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-            <!-- Stat Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-                <!-- Produk -->
-                <div class="bg-gray-100 dark:bg-[#1e293b] p-6 rounded-xl shadow-lg border border-cyan-500 dark:border-cyan-600 hover:border-cyan-700 dark:hover:border-cyan-400 transition">
-                    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Total Produk</h3>
-                    <p class="text-4xl font-bold text-gray-900 dark:text-white">124</p>
-                </div>
-
-                <!-- Pengguna -->
-                <div class="bg-gray-100 dark:bg-[#1e293b] p-6 rounded-xl shadow-lg border border-purple-500 dark:border-purple-600 hover:border-purple-700 dark:hover:border-purple-400 transition">
-                    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Total Pengguna</h3>
-                    <p class="text-4xl font-bold text-gray-900 dark:text-white">87</p>
-                </div>
-
-                <!-- Transaksi -->
-                <div class="bg-gray-100 dark:bg-[#1e293b] p-6 rounded-xl shadow-lg border border-pink-500 dark:border-pink-600 hover:border-pink-700 dark:hover:border-pink-400 transition">
-                    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">Total Transaksi</h3>
-                    <p class="text-4xl font-bold text-gray-900 dark:text-white">192</p>
-                </div>
-            </div>
-
-            <!-- Welcome Section -->
-            <div class="bg-gray-100 dark:bg-[#1e293b] p-8 rounded-xl shadow-lg border border-gray-300 dark:border-gray-700">
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Selamat datang, Admin!</h3>
-                <p class="text-gray-700 dark:text-gray-400 leading-relaxed">
-                    Kelola produk, pengguna, dan transaksi dari panel ini. Platform <span class="text-cyan-600 dark:text-cyan-400 font-semibold">Game Haven</span> dirancang untuk memberikan pengalaman belanja terbaik bagi komunitas gamer.
-                </p>
-            </div>
+<!-- File: /resources/views/admin/dashboard.blade.php -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard - Game Haven</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb {
+            background-color: rgba(107, 114, 128, 0.5);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="bg-white w-64 flex-shrink-0 flex flex-col border-r border-gray-200 overflow-y-auto">
+        <div class="px-6 py-4 flex items-center justify-center border-b border-gray-200">
+            <h1 class="text-2xl font-bold text-indigo-600">Game Haven</h1>
         </div>
+        <nav class="flex-1 px-4 py-6 space-y-2">
+            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 font-semibold transition">Dashboard</a>
+            <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 font-semibold transition">Kelola User</a>
+            <a href="{{ route('admin.products.index') }}" class="block px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 font-semibold transition">Kelola Produk</a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="w-full text-left px-4 py-2 rounded-lg text-red-600 hover:bg-red-100 font-semibold transition">Logout</button>
+            </form>
+        </nav>
+    </aside>
+
+    <!-- Main content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <header class="flex items-center justify-between bg-white px-6 py-4 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-800">@yield('title', 'Admin Dashboard')</h2>
+            <div class="flex items-center space-x-4">
+                <div class="text-gray-600 font-medium">Admin</div>
+                <img class="h-10 w-10 rounded-full object-cover" src="https://i.pravatar.cc/300" alt="User avatar" />
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-6">
+            @yield('content')
+        </main>
     </div>
-</x-app-layout>
+</body>
+</html>

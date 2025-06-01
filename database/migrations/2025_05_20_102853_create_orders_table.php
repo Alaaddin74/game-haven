@@ -11,11 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+    Schema::create('orders', function (Blueprint $table) {
+        $table->id();
+
+        // Kolom tambahan
+        $table->foreignId('user_id')->constrained()->onDelete('cascade');
+        $table->enum('status', ['draft', 'paid', 'cancelled'])->default('draft');
+
+        $table->decimal('total_amount', 15, 2)->default(0); // Tambahkan ini
+
+        $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.
