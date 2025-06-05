@@ -1,24 +1,27 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\Models\Product;
+use App\Models\Category;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
 */
 
+// Halaman utama
 Route::get('/', function () {
     return view('welcome');
 });
 
+// Redirect dashboard berdasarkan role
 Route::get('/dashboard', function () {
     $user = Auth::user();
 
@@ -28,28 +31,55 @@ Route::get('/dashboard', function () {
         return redirect()->route('customer.dashboard');
     }
 
-    abort(403); // unauthorized
+    abort(403);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-
-
+// Profil user (bawaan Breeze)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-// Admin routes
+// ---------------- ADMIN ----------------
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::view('/dashboard', 'admin.dashboard')->name('admin.dashboard');
-    // Add more admin-specific routes here
+    Route::resource('/users', UserController::class)->names('admin.users');
+    Route::resource('/products', ProductController::class)->names('admin.products');
 });
 
-// Customer routes
+// ---------------- CUSTOMER ----------------
 Route::middleware(['auth', 'role:customer'])->prefix('customer')->group(function () {
-    Route::view('/dashboard', 'customer.dashboard')->name('customer.dashboard');
-    // Add more customer-specific routes here
+    // Dashboard Produk + Pencarian & Filter
+    Route::get('/dashboard', function (Request $request) {
+        $query = $request->input('q');
+        $categoryId = $request->input('category');
+
+        $products = Product::query();
+
+        if ($query) {
+            $products->where(function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                  ->orWhere('description', 'like', "%{$query}%");
+            });
+        }
+
+        if ($categoryId) {
+            $products->where('category_id', $categoryId);
+        }
+
+        $products = $products->get();
+        $categories = Category::all();
+
+        return view('customer.dashboard', compact('products', 'categories', 'query', 'categoryId'));
+    })->name('customer.dashboard');
+
+    // Cart Routes via OrderController
+    Route::get('/cart', [OrderController::class, 'cart'])->name('customer.cart');
+    Route::post('/order/add/{id}', [OrderController::class, 'addToCart'])->name('order.add');
+    Route::delete('/order/remove/{item}', [OrderController::class, 'removeItem'])->name('order.remove');
+    Route::post('/order/checkout', [OrderController::class, 'checkout'])->name('order.checkout');
 });
 
+// Otentikasi (Breeze default)
 require __DIR__.'/auth.php';
