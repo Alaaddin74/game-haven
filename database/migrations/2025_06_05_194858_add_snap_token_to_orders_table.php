@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('orders', function (Blueprint $table) {
             //
-            // $table->enum('role', ['customer', 'admin'])->default('customer');
+            $table->string('snap_token')->nullable()->after('status');
         });
     }
 
@@ -22,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('orders', function (Blueprint $table) {
             //
+             $table->dropColumn('snap_token');
         });
     }
 };

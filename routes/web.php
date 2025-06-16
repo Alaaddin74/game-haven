@@ -75,10 +75,12 @@ Route::middleware(['auth', 'role:customer'])->prefix('customer')->group(function
     })->name('customer.dashboard');
 
     // Cart Routes via OrderController
+    Route::get('order/success/{order}', [OrderController::class, 'success'])->name('customer.success');
     Route::get('/cart', [OrderController::class, 'cart'])->name('customer.cart');
     Route::post('/order/add/{id}', [OrderController::class, 'addToCart'])->name('order.add');
     Route::delete('/order/remove/{item}', [OrderController::class, 'removeItem'])->name('order.remove');
     Route::post('/order/checkout', [OrderController::class, 'checkout'])->name('order.checkout');
+
 });
 
 // Otentikasi (Breeze default)

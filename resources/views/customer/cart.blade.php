@@ -24,7 +24,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @php $total = 0; @endphp
+                        @php $total = 0 ;    @endphp
                         @foreach($order->items as $item)
                             @php
                                 $subtotal = $item->quantity * $item->price_at_purchase;
@@ -35,8 +35,9 @@
                                     <img src="{{ $item->product->image_url ?? asset('images/placeholder.png') }}" alt="{{ $item->product->name }}" class="w-16 h-16 object-cover rounded-md">
                                     <span class="font-semibold">{{ $item->product->name }}</span>
                                 </td>
-                                <td class="py-2">Rp {{ number_format($item->price_at_purchase, 0, ',', '.') }}</td>
+                                <td class="py-2">Rp {{ number_format($item->product->price, 0, ',', '.') }}</td>
                                 <td class="py-2 text-center">{{ $item->quantity }}</td>
+
                                 <td class="py-2">Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
                                 <td class="py-2 text-center">
                                     <form method="POST" action="{{ route('order.remove', $item->id) }}">
@@ -64,8 +65,11 @@
                     <span>Total</span>
                     <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
                 </div>
-                <button class="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-2 px-4 rounded-lg mt-4">
-                    Check Out
+                <button id="pay-button" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-2 px-4 rounded-lg mt-4">
+                    Bayar Sekarang
+                    @if (!$order->snap_token)
+                         <p class="text-red-500 mt-2">❗ Snap token is missing. Cannot pay.</p>
+                    @endif
                 </button>
             </div>
         </div>
@@ -73,4 +77,36 @@
         <p class="text-gray-300 text-sm">Keranjang kamu masih kosong.</p>
     @endif
 </div>
+
+
+@section('scripts')
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY')}}"></script>
+
+     <script type="text/javascript">
+      document.getElementById('pay-button').onclick = function(){
+
+        // SnapToken acquired from previous step
+        snap.pay('{{$order->snap_token}}', {
+          // Optional
+          onSuccess: function(result){
+            /* You may add your own js here, this is just example */ //document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+            window.location.href = '{{ route('customer.success', $order->id) }}';
+          },
+          // Optional
+          onPending: function(result){
+            /* You may add your own js here, this is just example */
+            document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+          },
+          // Optional
+          onError: function(result){
+            /* You may add your own js here, this is just example */
+            document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+          }
+        });
+      };
+    </script>
+
+@endsection
 </x-app-layout>
+
+

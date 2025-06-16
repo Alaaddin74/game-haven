@@ -30,8 +30,11 @@
 
     <!-- Page Content -->
     <main class=" dark:bg-[#0f172a] min-h-screen">
+        @yield('content')
+        {{-- This is where the main content of the page will be injected --}}
+        {{-- For example, in customer/cart.blade.php, this will be replaced with the cart content --}}
         {{ $slot }}
     </main>
-
+    @yield('scripts')
 </body>
 </html>
