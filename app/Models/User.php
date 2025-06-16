@@ -48,4 +48,14 @@ class User extends Authenticatable
     return $this->role === 'admin';
 }
 
+public function loyaltyTransactions()
+{
+    return $this->hasMany(LoyaltyTransaction::class);
+}
+
+public function getTotalLoyaltyPointsAttribute()
+{
+    return $this->loyaltyTransactions()->sum('points');
+}
+
 }

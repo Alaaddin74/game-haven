@@ -17,7 +17,14 @@
                         🛒 {{ __('Keranjang') }}
                     </x-nav-link>
                 </div>
+
+
             </div>
+
+            <div class="hidden sm:flex sm:items-center space-x-4">
+    <div class="text-sm font-semibold text-gray-800 dark:text-white">
+        ⭐ Poin: {{ $loyaltyPoints ?? 0 }}
+    </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center">

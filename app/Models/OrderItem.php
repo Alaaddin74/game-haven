@@ -10,7 +10,7 @@ class OrderItem extends Model
         'order_id',
         'product_id',
         'quantity',
-        'unit_price',
+        'price_at_purchase',
     ];
 
     public $timestamps = false; // <-- Tambahkan ini
