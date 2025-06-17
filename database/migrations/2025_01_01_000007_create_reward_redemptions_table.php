@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('reward_id')->constrained()->onDelete('cascade');
-            $table->enum('status', ['processing', 'shipped', 'done'])->default('processing');
+            $table->enum('status', ['pending', 'approved','done'])->default('pending');
             $table->timestamp('redeemed_at')->useCurrent();
             $table->timestamps();
         });

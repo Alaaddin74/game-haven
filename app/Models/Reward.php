@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Reward extends Model
 {
     use HasFactory;
+
+    public function redemptions()
+{
+    return $this->hasMany(RewardRedemption::class);
 }
+}
+

@@ -24,6 +24,9 @@
             <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 font-semibold transition">Dashboard</a>
             <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 font-semibold transition">Kelola User</a>
             <a href="{{ route('admin.products.index') }}" class="block px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 font-semibold transition">Kelola Produk</a>
+            <a href="{{ route('admin.rewards.index') }}" class="block px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 font-semibold transition">Kelola Rewards</a>
+            <a href="{{ route('admin.redemptions.index') }}" class="block px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 font-semibold transition">Kelola Penukaran Reward</a>
+
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="w-full text-left px-4 py-2 rounded-lg text-red-600 hover:bg-red-100 font-semibold transition">Logout</button>
