@@ -63,8 +63,8 @@ public function redeem(Request $request, $rewardId)
 
 public function adminIndex()
 {
-    $redemptions = RewardRedemption::with('user', 'reward')->latest()->get();
-    return view('admin.kelolareward', compact('redemptions'));
+    $redemptions = RewardRedemption::with(['user', 'reward'])->latest()->get();
+    return view('admin.rewards.redemptions', compact('redemptions'));
 }
 
 public function updateStatus(Request $request, $id)

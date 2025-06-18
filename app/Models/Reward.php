@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Reward extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name',
+        'points_required',
+        'stock_quantity',
+    ];
 
     public function redemptions()
 {

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Reward;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,7 +53,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::view('/dashboard', 'admin.dashboard')->name('admin.dashboard');
     Route::resource('/users', UserController::class)->names('admin.users');
     Route::resource('/products', ProductController::class)->names('admin.products');
-    Route::resource('rewards', Admin\RewardController::class);
+    Route::resource('rewards', RewardController::class)->names('admin.rewards');
 
     Route::get('redemptions', [App\Http\Controllers\RewardRedemptionController::class, 'adminIndex'])->name('admin.redemptions.index');
     Route::post('redemptions/{id}/update-status', [App\Http\Controllers\RewardRedemptionController::class, 'updateStatus'])->name('admin.redemptions.updateStatus');
