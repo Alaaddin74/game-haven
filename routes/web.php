@@ -4,11 +4,18 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\RewardRedemptionController;
+
+use App\Http\Controllers\Admin\RewardController;
+// use App\Http\Controllers\RewardRedemptionController;
+
+// use App\Http\Controllers\RewardController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Reward;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +53,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::view('/dashboard', 'admin.dashboard')->name('admin.dashboard');
     Route::resource('/users', UserController::class)->names('admin.users');
     Route::resource('/products', ProductController::class)->names('admin.products');
+    Route::resource('rewards', RewardController::class)->names('admin.rewards');
+
+    Route::get('redemptions', [App\Http\Controllers\RewardRedemptionController::class, 'adminIndex'])->name('admin.redemptions.index');
+    Route::post('redemptions/{id}/update-status', [App\Http\Controllers\RewardRedemptionController::class, 'updateStatus'])->name('admin.redemptions.updateStatus');
+
 });
 
 // ---------------- CUSTOMER ----------------
@@ -80,6 +92,13 @@ Route::middleware(['auth', 'role:customer'])->prefix('customer')->group(function
     Route::post('/order/add/{id}', [OrderController::class, 'addToCart'])->name('order.add');
     Route::delete('/order/remove/{item}', [OrderController::class, 'removeItem'])->name('order.remove');
     Route::post('/order/checkout', [OrderController::class, 'checkout'])->name('order.checkout');
+
+    #rewards
+    Route::get('/rewards', [RewardRedemptionController::class, 'index'])->name('rewards.index');
+    Route::post('/rewards/redeem/{id}', [RewardRedemptionController::class, 'redeem'])->name('rewards.redeem');
+    Route::put('admin/reward-redemptions/{id}/status', [App\Http\Controllers\Admin\RewardRedemptionController::class, 'updateStatus'])->name('admin.reward-redemptions.updateStatus');
+
+
 
 });
 

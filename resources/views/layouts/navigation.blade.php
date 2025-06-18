@@ -16,6 +16,12 @@
                         class="text-gray-800 dark:text-white hover:text-red-600 dark:hover:text-cyan-400">
                         🛒 {{ __('Keranjang') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('rewards.index')" :active="request()->routeIs('rewards.index')"
+                        class="text-gray-800 dark:text-white hover:text-red-600 dark:hover:text-cyan-400">
+                    🎁 {{ __('Rewards') }}
+                    </x-nav-link>
+
                 </div>
 
 
@@ -80,6 +86,11 @@
             <x-responsive-nav-link :href="route('customer.cart')" :active="request()->routeIs('customer.cart')"
                 class="text-gray-800 dark:text-white hover:text-red-600 dark:hover:text-cyan-400">
                 🛒 {{ __('Keranjang') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('rewards.index')" :active="request()->routeIs('rewards.index')"
+                class="text-gray-800 dark:text-white hover:text-red-600 dark:hover:text-cyan-400">
+                    🎁 {{ __('Rewards') }}
             </x-responsive-nav-link>
         </div>
 
