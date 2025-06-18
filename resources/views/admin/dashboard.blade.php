@@ -21,11 +21,12 @@
             <h1 class="text-2xl font-bold text-indigo-600">Game Haven</h1>
         </div>
         <nav class="flex-1 px-4 py-6 space-y-2">
-            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 font-semibold transition">Dashboard</a>
+            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 font-semibold transition">Kelola Kategori</a>
             <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 font-semibold transition">Kelola User</a>
             <a href="{{ route('admin.products.index') }}" class="block px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 font-semibold transition">Kelola Produk</a>
             <a href="{{ route('admin.rewards.index') }}" class="block px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 font-semibold transition">Kelola Rewards</a>
             <a href="{{ route('admin.redemptions.index') }}" class="block px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 font-semibold transition">Kelola Penukaran Reward</a>
+            <a href="{{ route('admin.orders.index') }}" class="block px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 font-semibold transition">Histori Transaksi</a>
 
             <form method="POST" action="{{ route('logout') }}">
                 @csrf

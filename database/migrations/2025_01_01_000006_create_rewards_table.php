@@ -14,6 +14,7 @@ return new class extends Migration
             $table->integer('points_required');
             $table->integer('stock_quantity');
             $table->text('description')->nullable();
+            $table->text('image')->nullable();
             $table->timestamps();
         });
     }

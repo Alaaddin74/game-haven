@@ -39,15 +39,21 @@
                 <div class="bg-[#1e293b] p-4 rounded-xl shadow hover:shadow-lg transition cursor-pointer"
                      onclick="showDetail({{ $product->id }})">
                     <div class="w-full aspect-[4/3] bg-gray-800 rounded-md mb-4 overflow-hidden flex items-center justify-center">
-                        <img src="{{ $product->image_url ?? asset('images/placeholder.png') }}"
-                             alt="{{ $product->name }}"
-                             class="object-cover w-full h-full" />
+                        <img 
+                            src="{{ $product->image_url 
+                                      ? asset('storage/'.$product->image_url) 
+                                      : asset('images/placeholder.png') }}" 
+                            alt="{{ $product->name }}" 
+                            class="object-cover w-full h-full" 
+                        />
                     </div>
                     <h2 class="text-base font-semibold truncate">{{ $product->name }}</h2>
                     @if ($product->category)
                         <p class="text-sm text-gray-400">{{ $product->category->name }}</p>
                     @endif
-                    <p class="text-cyan-400 text-sm mt-1">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
+                    <p class="text-cyan-400 text-sm mt-1">
+                        Rp {{ number_format($product->price, 0, ',', '.') }}
+                    </p>
                 </div>
 
                 {{-- Modal --}}
@@ -58,9 +64,15 @@
                                 class="absolute top-2 right-3 text-xl font-bold text-gray-500 hover:text-red-500">
                             &times;
                         </button>
-                        <img src="{{ $product->image_url ?? asset('images/placeholder.png') }}"
-                             alt="{{ $product->name }}"
-                             class="w-full h-48 object-contain rounded mb-4">
+
+                        <img 
+                            src="{{ $product->image_url 
+                                      ? asset('storage/'.$product->image_url) 
+                                      : asset('images/placeholder.png') }}"
+                            alt="{{ $product->name }}" 
+                            class="w-full h-48 object-contain rounded mb-4" 
+                        />
+
                         <h2 class="text-xl font-bold mb-2">{{ $product->name }}</h2>
                         <p class="mb-2 text-sm">{{ $product->description }}</p>
                         <p class="mb-4 font-semibold text-cyan-600">

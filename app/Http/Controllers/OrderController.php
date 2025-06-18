@@ -11,6 +11,28 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
+    public function index()
+    {
+        $orders = Order::with('user')
+                       ->orderBy('created_at','desc')
+                       ->get();
+
+        return view('admin.histori_transaksi', compact('orders'));
+    }
+
+    // Mengubah status order
+    public function updateStatus(Request $request, Order $order)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,paid,cancelled,refunded',
+        ]);
+
+        $order->status = $request->status;
+        $order->save();
+
+        return redirect()->route('admin.orders.index')
+                         ->with('success', 'Status transaksi berhasil diubah.');
+    }
     /**
      * Menampilkan halaman keranjang belanja.
      */
@@ -39,7 +61,7 @@ class OrderController extends Controller
 
         $order = Order::firstOrCreate(
             ['user_id' => $user->id, 'status' => 'pending'],
-            ['total_price' => 0, 'shipping_address' => '']
+            ['total_price' => 0, 'total_amount' => 0, 'shipping_address' => '']
         );
 
         $existingItem = OrderItem::where('order_id', $order->id)
@@ -105,10 +127,10 @@ class OrderController extends Controller
 
     private function generateSnapToken($order)
     {
+        
         // Hitung total dari seluruh item di order
-        $totalAmount = $order->items()->with('product')->get()->sum(function ($item) {
-            return $item->quantity * $item->price_at_purchase;
-        });
+        $totalPrice  = $order->items->sum(fn($item) => $item->quantity * $item->price_at_purchase);
+        $totalAmount = $order->items->sum('quantity');
 
         \Midtrans\Config::$serverKey = config('midtrans.server_key');
         \Midtrans\Config::$isProduction = false;
@@ -118,7 +140,7 @@ class OrderController extends Controller
         $params = [
             'transaction_details' => [
                 'order_id' => $order->id.uniqid(),
-                'gross_amount' => $totalAmount,
+                'gross_amount' => $totalPrice,
             ],
             'customer_details' => [
                 'first_name' => auth()->user()->name,
@@ -128,8 +150,10 @@ class OrderController extends Controller
 
         try {
             $snapToken = \Midtrans\Snap::getSnapToken($params);
+            
             $order->snap_token = $snapToken;
-            $order->total_price = $totalAmount;
+            $order->total_price = $totalPrice;
+            $order->total_amount = $totalAmount;
             $order->save();
         } catch (\Exception $e) {
             logger()->error('Midtrans Snap Error: ' . $e->getMessage());

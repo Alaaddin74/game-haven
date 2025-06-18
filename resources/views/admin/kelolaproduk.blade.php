@@ -25,7 +25,7 @@
                 <td class="py-2 px-4 border">{{ $product->name }}</td>
                 <td class="py-2 px-4 border">{{ $product->category->name ?? '-' }}</td>
                 <td class="py-2 px-4 border">Rp{{ number_format($product->price, 0, ',', '.') }}</td>
-                <td class="py-2 px-4 border">{{ $product->stock }}</td>
+                <td class="py-2 px-4 border">{{ $product->stock_quantity }}</td>
                 <td class="py-2 px-4 border">
                     <a href="{{ route('admin.products.edit', $product->id) }}" class="text-blue-500 hover:underline">Edit</a>
                     <form method="POST" action="{{ route('admin.products.destroy', $product->id) }}" class="inline">

@@ -31,14 +31,18 @@
                                 $total += $subtotal;
                             @endphp
                             <tr class="border-b border-gray-700">
-                                <td class="py-4 flex items-center gap-4">
-                                    <img src="{{ $item->product->image_url ?? asset('images/placeholder.png') }}" alt="{{ $item->product->name }}" class="w-16 h-16 object-cover rounded-md">
-                                    <span class="font-semibold">{{ $item->product->name }}</span>
-                                </td>
-                                <td class="py-2">Rp {{ number_format($item->product->price, 0, ',', '.') }}</td>
-                                <td class="py-2 text-center">{{ $item->quantity }}</td>
-
-                                <td class="py-2">Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
+              <td class="py-4 flex items-center gap-4">
+                <img src="{{ $item->product->image_url
+                      ? asset('storage/'.$item->product->image_url)
+                      : asset('images/placeholder.png') }}"
+                     alt="{{ $item->product->name }}"
+                     class="w-16 h-16 object-cover rounded-md">
+                <span class="font-semibold">{{ $item->product->name }}</span>
+              </td>
+              <td class="py-2">Rp {{ number_format($item->product->price,0,',','.') }}</td>
+              <td class="py-2 text-center">{{ $item->quantity }}</td>
+              <td class="py-2">Rp {{ number_format($subtotal,0,',','.') }}</td>
+              <td class="py-2 text-center">
                                 <td class="py-2 text-center">
                                     <form method="POST" action="{{ route('order.remove', $item->id) }}">
                                         @csrf
@@ -80,32 +84,25 @@
 
 
 @section('scripts')
-    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY')}}"></script>
-
-     <script type="text/javascript">
-      document.getElementById('pay-button').onclick = function(){
-
-        // SnapToken acquired from previous step
-        snap.pay('{{$order->snap_token}}', {
-          // Optional
-          onSuccess: function(result){
-            /* You may add your own js here, this is just example */ //document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-            window.location.href = '{{ route('customer.success', $order->id) }}';
-          },
-          // Optional
-          onPending: function(result){
-            /* You may add your own js here, this is just example */
-            document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-          },
-          // Optional
-          onError: function(result){
-            /* You may add your own js here, this is just example */
-            document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-          }
-        });
-      };
-    </script>
-
+    @if($order && $order->snap_token)
+        <script src="https://app.sandbox.midtrans.com/snap/snap.js"
+                data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
+        <script type="text/javascript">
+            document.getElementById('pay-button').onclick = function(){
+                snap.pay('{{ $order->snap_token }}', {
+                    onSuccess: function(result){
+                        window.location.href = '{{ route('customer.success', $order->id) }}';
+                    },
+                    onPending: function(result){
+                        console.log(result);
+                    },
+                    onError: function(result){
+                        console.log(result);
+                    }
+                });
+            };
+        </script>
+        @endif
 @endsection
 </x-app-layout>
 
