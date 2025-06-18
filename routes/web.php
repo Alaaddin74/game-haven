@@ -98,6 +98,9 @@ Route::middleware(['auth', 'role:customer'])->prefix('customer')->group(function
     Route::post('/rewards/redeem/{id}', [RewardRedemptionController::class, 'redeem'])->name('rewards.redeem');
     Route::put('admin/reward-redemptions/{id}/status', [App\Http\Controllers\Admin\RewardRedemptionController::class, 'updateStatus'])->name('admin.reward-redemptions.updateStatus');
 
+    #delivry 
+    Route::post('/order/save-delivery', [OrderController::class, 'saveDeliveryInfo'])->name('order.saveDeliveryInfo');
+
 
 
 });

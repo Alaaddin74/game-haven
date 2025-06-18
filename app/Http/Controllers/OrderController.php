@@ -99,7 +99,7 @@ class OrderController extends Controller
 
         $order->status = 'pending'; // setelah checkout, status jadi 'paid'
         $order->save();
-
+        
         return redirect()->route('customer.dashboard')->with('success', 'Pesanan berhasil dibuat.');
     }
 
@@ -152,6 +152,25 @@ class OrderController extends Controller
 
         return view('customer.success');
     }
+
+    public function saveDeliveryInfo(Request $request)
+{
+    $request->validate([
+        'delivery_method' => 'required|in:ambil,antar',
+        'shipping_address' => 'nullable|string',
+    ]);
+
+    $order = Order::where('user_id', auth()->id())
+        ->where('status', 'pending')
+        ->firstOrFail();
+
+    $order->delivery_method = $request->delivery_method;
+    $order->shipping_address = $request->delivery_method === 'antar' ? $request->shipping_address : null;
+    $order->save();
+
+    return response()->json(['success' => true]);
+}
+
 
 
 //     public function processLoyaltyPoints()

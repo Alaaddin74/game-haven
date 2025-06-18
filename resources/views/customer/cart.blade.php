@@ -64,7 +64,8 @@
                         <span>Total</span>
                         <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
                     </div>
-
+<form method="POST" action="{{ route('order.checkout') }}" id="checkout-form">
+    @csrf
                     {{-- Pilihan Pengiriman --}}
                     <div class="mt-4">
     <label class="block font-semibold mb-2">Metode Pengiriman:</label>
@@ -82,7 +83,7 @@
     {{-- Input alamat hanya muncul jika pilih "antar" --}}
     <div id="address-section" class="mt-4 hidden">
         <label for="delivery_address" class="block mb-1">Alamat Pengantaran:</label>
-        <textarea id="delivery_address" rows="3" class="w-full p-2 rounded bg-gray-800 border border-gray-600 text-white" placeholder="Masukkan alamat lengkap..."></textarea>
+        <textarea id="shipping_address" rows="3" class="w-full p-2 rounded bg-gray-800 border border-gray-600 text-white" placeholder="Masukkan alamat lengkap..."></textarea>
         <p id="address-error" class="text-red-500 text-sm mt-1 hidden">Alamat harus diisi jika memilih antar.</p>
     </div>
 </div>
@@ -95,6 +96,8 @@
                         <p class="text-red-500 mt-4">❗ Snap token tidak tersedia. Silakan refresh halaman atau tunggu proses sistem.</p>
                     @endif
                 </div>
+
+                </form>
             </div>
         @else
             <p class="text-gray-300 text-sm">Keranjang kamu masih kosong.</p>
@@ -106,10 +109,9 @@
 @section('scripts')
 <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY')}}"></script>
 <script>
-    // Tampilkan/hidden textarea alamat jika pilih antar
     const deliveryOptions = document.querySelectorAll('.delivery-option');
     const addressSection = document.getElementById('address-section');
-    const addressInput = document.getElementById('delivery_address');
+    const addressInput = document.getElementById('shipping_address');
     const addressError = document.getElementById('address-error');
 
     deliveryOptions.forEach(option => {
@@ -118,39 +120,61 @@
                 addressSection.classList.remove('hidden');
             } else {
                 addressSection.classList.add('hidden');
-                addressInput.value = ''; // Kosongkan input jika pindah ke ambil
+                addressInput.value = '';
                 addressError.classList.add('hidden');
             }
         });
     });
 
-    document.getElementById('pay-button').onclick = function () {
+    document.getElementById('pay-button').onclick = function (e) {
+        e.preventDefault();
+
         const selectedDelivery = document.querySelector('input[name="delivery_method"]:checked').value;
         const address = addressInput.value.trim();
 
         if (selectedDelivery === 'antar' && address === '') {
             addressError.classList.remove('hidden');
             addressInput.focus();
-            return; // Hentikan proses pembayaran
+            return;
         }
 
-        console.log("Delivery Method:", selectedDelivery);
-        console.log("Alamat:", address);
-
-        // TODO: Kirim address ke backend jika mau disimpan
-        snap.pay('{{ $order->snap_token }}', {
-            onSuccess: function (result) {
-                window.location.href = '{{ route('customer.success', $order->id) }}';
+        // Kirim delivery_method dan address via AJAX ke backend
+        fetch("{{ route('order.saveDeliveryInfo') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
             },
-            onPending: function (result) {
-                alert("Pembayaran sedang diproses...");
-            },
-            onError: function (result) {
-                alert("Terjadi kesalahan pada pembayaran.");
-            }
+            body: JSON.stringify({
+                delivery_method: selectedDelivery,
+                shipping_address: address
+            }),
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Gagal menyimpan data pengiriman');
+            return response.json();
+        })
+        .then(data => {
+            // Setelah sukses simpan, lanjutkan ke Midtrans
+            snap.pay('{{ $order->snap_token }}', {
+                onSuccess: function (result) {
+                    window.location.href = '{{ route('customer.success', $order->id) }}';
+                },
+                onPending: function (result) {
+                    alert("Pembayaran sedang diproses...");
+                },
+                onError: function (result) {
+                    alert("Terjadi kesalahan pada pembayaran.");
+                }
+            });
+        })
+        .catch(error => {
+            alert("Terjadi kesalahan saat menyimpan alamat pengiriman.");
+            console.error(error);
         });
     };
 </script>
+
 @endsection
 
     @endif
