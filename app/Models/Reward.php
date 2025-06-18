@@ -12,6 +12,8 @@ class Reward extends Model
         'name',
         'points_required',
         'stock_quantity',
+        'description',
+        'image_url',
     ];
 
     public function redemptions()

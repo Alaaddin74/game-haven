@@ -9,7 +9,15 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'status'];
+    protected $fillable = [
+        'user_id',
+        'status',
+        'total_amount',      // tambahkan
+        'total_price',       // tambahkan
+        'snap_token',
+        'payment_method',    // jika di‑mass assign
+        'shipping_address',  // jika di‑mass assign
+    ];
 
     public function items()
     {

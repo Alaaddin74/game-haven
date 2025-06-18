@@ -50,10 +50,16 @@ Route::middleware('auth')->group(function () {
 
 // ---------------- ADMIN ----------------
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-    Route::view('/dashboard', 'admin.dashboard')->name('admin.dashboard');
+    Route::get('/dashboard', [App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('admin.dashboard');
+    Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class)->names('admin.categories');
     Route::resource('/users', UserController::class)->names('admin.users');
     Route::resource('/products', ProductController::class)->names('admin.products');
     Route::resource('rewards', RewardController::class)->names('admin.rewards');
+    Route::get('orders', [\App\Http\Controllers\OrderController::class, 'index'])
+     ->name('admin.orders.index');
+     Route::post('orders/{order}/status', [OrderController::class, 'updateStatus'])
+     ->name('admin.orders.updateStatus');
+
 
     Route::get('redemptions', [App\Http\Controllers\RewardRedemptionController::class, 'adminIndex'])->name('admin.redemptions.index');
     Route::post('redemptions/{id}/update-status', [App\Http\Controllers\RewardRedemptionController::class, 'updateStatus'])->name('admin.redemptions.updateStatus');
@@ -100,7 +106,6 @@ Route::middleware(['auth', 'role:customer'])->prefix('customer')->group(function
 
     #delivry 
     Route::post('/order/save-delivery', [OrderController::class, 'saveDeliveryInfo'])->name('order.saveDeliveryInfo');
-
 
 
 });

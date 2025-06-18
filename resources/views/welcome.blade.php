@@ -49,7 +49,10 @@
         <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Box: Game -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-center hover:shadow-lg transition">
-                <div class="h-40 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                <img 
+                src="{{ asset('images/game.jpg') }}" 
+                alt="Game PS5" 
+                class="h-40 w-full object-cover rounded mb-4">
                 <h3 class="font-bold text-xl mb-2">Game</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-300">
                     Kaset original untuk PlayStation, Xbox, dan Nintendo Switch.
@@ -58,7 +61,10 @@
 
             <!-- Box: Konsol -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-center hover:shadow-lg transition">
-                <div class="h-40 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                <img 
+                src="{{ asset('images/console.jpg') }}" 
+                alt="Game PS5" 
+                class="h-40 w-full object-cover rounded mb-4">
                 <h3 class="font-bold text-xl mb-2">Konsol</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-300">
                     Dapatkan konsol resmi terbaru dengan garansi.
@@ -67,7 +73,10 @@
 
             <!-- Box: Aksesoris -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-center hover:shadow-lg transition">
-                <div class="h-40 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                <img 
+                src="{{ asset('images/accesories.webp') }}" 
+                alt="Game PS5" 
+                class="h-40 w-full object-cover rounded mb-4">
                 <h3 class="font-bold text-xl mb-2">Aksesoris</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-300">
                     Controller, headset, dan perangkat gaming lainnya.

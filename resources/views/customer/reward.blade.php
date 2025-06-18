@@ -19,8 +19,9 @@
                 <div class="bg-[#1e293b] p-4 rounded-xl shadow hover:shadow-lg transition cursor-pointer"
                      onclick="showDetail({{ $reward->id }})">
                     <div class="w-full aspect-[4/3] bg-gray-800 rounded-md mb-4 overflow-hidden flex items-center justify-center">
-                        <img src="{{ asset('images/reward-default.png') }}" alt="Reward Image"
-                             class="object-contain w-full h-full">
+                        <img src="{{ $reward->image_url ? asset('storage/' . $reward->image_url) : asset('images/reward-default.png') }}"
+                        alt="{{ $reward->name }}"
+                        class="w-full h-48 object-contain rounded mb-4">
                     </div>
                     <h2 class="text-base font-semibold truncate">{{ $reward->name }}</h2>
                     <p class="text-sm text-gray-400">Stok: {{ $reward->stock_quantity }}</p>
@@ -35,9 +36,9 @@
                                 class="absolute top-2 right-3 text-xl font-bold text-gray-500 hover:text-red-500">
                             &times;
                         </button>
-                        <img src="{{ asset('images/reward-default.png') }}"
-                             alt="{{ $reward->name }}"
-                             class="w-full h-48 object-contain rounded mb-4">
+                        <img src="{{ $reward->image_url ? asset('storage/' . $reward->image_url) : asset('images/reward-default.png') }}"
+                            alt="{{ $reward->name }}"
+                            class="w-full h-48 object-contain rounded mb-4">
                         <h2 class="text-xl font-bold mb-2">{{ $reward->name }}</h2>
                         <p class="mb-2 text-sm">{{ $reward->description }}</p>
                         <p class="mb-1 font-medium text-gray-700">Poin dibutuhkan: <span class="text-yellow-600">{{ $reward->points_required }}</span></p>
@@ -65,7 +66,9 @@
         @foreach($approvedRewards as $redemption)
             <div class="bg-gray-800 p-4 rounded-xl shadow text-white">
                 <div class="w-full aspect-[4/3] bg-gray-700 rounded-md mb-4 overflow-hidden flex items-center justify-center">
-                    <img src="{{ asset('images/reward-default.png') }}" alt="Reward Image" class="object-contain w-full h-full">
+                    <img src="{{ $redemption->reward->image_url ? asset('storage/' . $redemption->reward->image_url) : asset('images/reward-default.png') }}"
+                    alt="{{ $redemption->reward->name }}"
+                    class="object-contain w-full h-full">
                 </div>
                 <h2 class="text-base font-semibold truncate">{{ $redemption->reward->name }}</h2>
                 <p class="text-sm text-gray-300">Status: 
